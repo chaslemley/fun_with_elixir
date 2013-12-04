@@ -9,4 +9,8 @@ fizz_buzz_input = fn
   n -> {rem(n,3), rem(n,5), n}
 end
 
-IO.puts 1..100 |> Enum.map(fizz_buzz_input) |> Enum.map(fizz_buzz) |> Enum.join(" ")
+1..100 |>
+  Enum.map(fizz_buzz_input) |>
+  Enum.map(fizz_buzz) |>
+  Enum.join(" ") |>
+  IO.puts
