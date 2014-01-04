@@ -18,4 +18,4 @@ defmodule Parallel do
   end
 end
 
-Parallel.pmap([1,2,3,4,5], &(&1 * 2)) |> IO.inspect
+Parallel.pmap((1..50), &(&1 * 2)) |> IO.inspect
