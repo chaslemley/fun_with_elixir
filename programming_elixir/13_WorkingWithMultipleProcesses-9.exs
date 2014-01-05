@@ -17,11 +17,20 @@ defmodule CatCounter do
     |> Enum.reduce &(&1 + &2)
   end
 
-  defp file_counter(filename, search_term) do
-    parse = File.read!(filename) |> String.to_char_list
-    case parse do
-      {:ok, char_list} ->
-        Enum.chunk(char_list, String.length(search_term), 1)
+  defp file_counter(path, search_term) do
+    case File.read(path) do
+      {:error, :eisdir} ->
+        cat_counter(path, search_term)
+      {:ok, file_contents} ->
+        string_counter(file_contents, search_term)
+      _ -> 0
+    end
+  end
+
+  defp string_counter(string, search_term) do
+    case String.to_char_list(string) do
+      {:ok, contents} ->
+        Enum.chunk(contents, String.length(search_term), 1)
         |> Enum.count &(&1 == String.to_char_list!(search_term))
       _ -> 0
     end
@@ -57,7 +66,16 @@ defmodule Scheduler do
   end
 end
 
-to_process = [ { "/Users/chas/Projects/elixir/programming_elixir", "cat" } ]
+to_process = [ { "/Users/chas/Projects/ht/hotelstonight/app/models", "a" },
+               { "/Users/chas/Projects/ht/hotelstonight/app/models", "e" },
+               { "/Users/chas/Projects/ht/hotelstonight/app/models", "i" },
+               { "/Users/chas/Projects/ht/hotelstonight/app/models", "o" },
+               { "/Users/chas/Projects/ht/hotelstonight/app/models", "u" },
+               { "/Users/chas/Projects/ht/hotelstonight/app/models", "r" },
+               { "/Users/chas/Projects/ht/hotelstonight/app/models", "s" },
+               { "/Users/chas/Projects/ht/hotelstonight/app/models", "t" },
+               { "/Users/chas/Projects/ht/hotelstonight/app/models", "l" },
+               { "/Users/chas/Projects/ht/hotelstonight/app/models", "n" } ]
 
 Enum.each 1..10, fn num_processes ->
   {time, result} = :timer.tc(Scheduler, :run,
